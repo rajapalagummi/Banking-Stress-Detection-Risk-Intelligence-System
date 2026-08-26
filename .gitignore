@@ -6,3 +6,4 @@ data/outputs/
 mlruns.db
 .env
 .DS_Store
+mlflow.db

@@ -1,0 +1,117 @@
+# BankLens — Power BI DAX Measures
+# Connect Power BI Desktop to PostgreSQL via ODBC
+# Data source: banklens database, bank_scores table
+
+# ── Page 1: Institution Scorecard ────────────────────────────────────────────
+
+Stress Score (Latest Quarter) =
+CALCULATE(
+    AVERAGE(bank_scores[stress_score]),
+    FILTER(
+        bank_scores,
+        bank_scores[quarter_date] = MAX(bank_scores[quarter_date])
+    )
+)
+
+NPA Ratio (Latest) =
+CALCULATE(
+    AVERAGE(bank_scores[npa_ratio]),
+    FILTER(bank_scores, bank_scores[quarter_date] = MAX(bank_scores[quarter_date]))
+)
+
+Deposit Growth (Latest) =
+CALCULATE(
+    AVERAGE(bank_scores[deposit_growth_qoq]),
+    FILTER(bank_scores, bank_scores[quarter_date] = MAX(bank_scores[quarter_date]))
+)
+
+Capital Ratio (Latest) =
+CALCULATE(
+    AVERAGE(bank_scores[capital_ratio]),
+    FILTER(bank_scores, bank_scores[quarter_date] = MAX(bank_scores[quarter_date]))
+)
+
+Stress Tier Color =
+SWITCH(
+    TRUE(),
+    [Stress Score (Latest Quarter)] >= 66, "#e74c3c",
+    [Stress Score (Latest Quarter)] >= 33, "#f39c12",
+    "#2ecc71"
+)
+
+# ── Page 2: Early Warning Monitor ────────────────────────────────────────────
+
+Early Warning Flag Count =
+CALCULATE(
+    COUNTROWS(bank_scores),
+    bank_scores[early_warning_flag] = 1,
+    bank_scores[quarter_date] = MAX(bank_scores[quarter_date])
+)
+
+Pct Banks At Risk =
+DIVIDE(
+    CALCULATE(COUNTROWS(bank_scores), bank_scores[ml_stress_flag] = 1),
+    COUNTROWS(bank_scores)
+)
+
+60-Day Leading Indicator =
+VAR CurrentScore = [Stress Score (Latest Quarter)]
+VAR PrevScore = CALCULATE(
+    AVERAGE(bank_scores[stress_score]),
+    DATEADD(bank_scores[quarter_date], -1, QUARTER)
+)
+RETURN
+    IF(CurrentScore > PrevScore * 1.15, "⚠️ Escalating", "✅ Stable")
+
+QoQ Stress Change =
+VAR Current = [Stress Score (Latest Quarter)]
+VAR Previous = CALCULATE(
+    AVERAGE(bank_scores[stress_score]),
+    PREVIOUSQUARTER(bank_scores[quarter_date])
+)
+RETURN Current - Previous
+
+# ── Page 3: Macro Overlay ─────────────────────────────────────────────────────
+
+System NPA vs Fed Rate Correlation =
+CALCULATE(
+    CORR(bank_scores[npa_ratio], bank_scores[fed_funds_rate])
+)
+
+Avg NPA by Quarter =
+AVERAGEX(
+    VALUES(bank_scores[quarter_date]),
+    CALCULATE(AVERAGE(bank_scores[npa_ratio]))
+)
+
+Deposit Stress Index =
+DIVIDE(
+    CALCULATE(COUNTROWS(bank_scores), bank_scores[deposit_outflow_flag] = 1),
+    COUNTROWS(bank_scores)
+) * 100
+
+# ── Conditional Formatting Rules ─────────────────────────────────────────────
+# Apply to stress_score column in matrix visual:
+# Red:    >= 66
+# Amber:  >= 33 and < 66
+# Green:  < 33
+
+# Apply to deposit_growth_qoq:
+# Red:    < -0.05
+# Amber:  < -0.02 and >= -0.05
+# Green:  >= -0.02
+
+# ── Power BI Report Pages ─────────────────────────────────────────────────────
+# Page 1 — Institution Scorecard
+#   Visuals: Gauge (stress score 0-100), KPI cards (NPA, deposit growth, LDR, NIM),
+#            Line chart (8-quarter trend per metric), Slicer (bank selector)
+
+# Page 2 — Early Warning Monitor
+#   Visuals: Matrix (banks × stress signals, conditional formatting),
+#            Bar chart (stress tier distribution), Card (% banks at risk),
+#            Drill-through to individual bank detail page
+
+# Page 3 — Macro Overlay
+#   Visuals: Dual-axis line (Fed funds rate vs avg NPA over time),
+#            Scatter (yield curve slope vs deposit growth),
+#            Forecast table (next 2 quarters with confidence bands)

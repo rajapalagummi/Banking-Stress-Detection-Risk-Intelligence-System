@@ -172,8 +172,8 @@ def build_bank_panel(n_banks: int = 50, quarters: int = 28) -> pd.DataFrame:
             date = start_q + pd.DateOffset(months=3 * q)
             stress_factor = 1.0
 
-            if is_stress_bank and q > 24:
-                stress_factor = 1.0 + (q - 24) * 0.35
+            if is_stress_bank and q > 10:
+                stress_factor = 1.0 + (q - 10) * 0.08
 
             npa_ratio = base_npa * stress_factor * np.random.lognormal(0, 0.1)
             deposit_growth = np.random.normal(0.02, 0.03) - (stress_factor - 1) * 0.05

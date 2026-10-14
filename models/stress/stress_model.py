@@ -172,10 +172,16 @@ def validate_svb_detection(df: pd.DataFrame) -> dict:
     early_flags = []
     for bank_id in stress_banks["bank_id"].unique():
         bank_data = stress_banks[stress_banks["bank_id"] == bank_id].sort_values("quarter_date")
-        peak_stress_q = bank_data.loc[bank_data["stress_factor"].idxmax(), "quarter_date"]
-        first_flag_q = bank_data[
-            (bank_data["ml_stress_prob"] >= STRESS_THRESHOLD) &
-            (bank_data["quarter_date"] < peak_stress_q)
+        # Search full df for this bank — early quarters may not be labeled is_stress_bank==1
+        all_bank_data = df[df["bank_id"] == bank_id].sort_values("quarter_date")
+        # Use onset quarter (first stress quarter) not peak, so early = before stress begins
+        onset_rows = all_bank_data[all_bank_data["stress_factor"] > 1.0]
+        if onset_rows.empty:
+            continue
+        peak_stress_q = onset_rows["quarter_date"].min()
+        first_flag_q = all_bank_data[
+            (all_bank_data["ml_stress_prob"] >= STRESS_THRESHOLD) &
+            (all_bank_data["quarter_date"] < peak_stress_q)
         ]["quarter_date"].min()
 
         if pd.notna(first_flag_q):

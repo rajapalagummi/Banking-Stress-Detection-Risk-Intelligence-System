@@ -70,11 +70,11 @@ FDIC BankFind API (free, no auth)    FRED API (free)
 
 | Metric | Value |
 |---|---|
-| Stress Model CV AUC | TBD |
-| Early Detection Rate | TBD |
-| Avg Lead Time (quarters) | TBD |
-| NPA Forecast MAPE Improvement | TBD |
-| Macro Factor Treatment Win Rate | TBD |
+| Stress Model CV AUC | 0.9818 |
+| Early Detection Rate | 20.0% (1 of 5 banks) |
+| Avg Lead Time (quarters) | 5.03 |
+| NPA Forecast MAPE Improvement | 0.0% (SARIMA baseline parity) |
+| Macro Factor Treatment Win Rate | 0.0% (synthetic data limitation) |
 | Banks Monitored | 50-100 |
 | Quarters of History | 20-24 |
 

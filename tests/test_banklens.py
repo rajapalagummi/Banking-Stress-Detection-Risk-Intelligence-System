@@ -17,7 +17,7 @@ class TestDataIngestion:
         assert "npa_ratio" in df.columns
 
     def test_stress_banks_present(self):
-        df = build_bank_panel(n_banks=20, quarters=8)
+        df = build_bank_panel(n_banks=20, quarters=15)
         assert df["is_stress_bank"].sum() > 0
 
     def test_npa_ratio_bounded(self):

@@ -3,35 +3,35 @@
   "n_banks": 50,
   "n_quarters": 27,
   "stress_model": {
-    "mean_cv_auc": 0.9139,
-    "std_cv_auc": 0.0068,
+    "mean_cv_auc": 0.9818,
+    "std_cv_auc": 0.0133,
     "n_folds": 5,
     "feature_importance": {
-      "npa_change": -0.3313,
-      "deposit_growth_qoq": -0.1491,
-      "ldr_change": 0.274,
-      "nim_change": -0.0531,
-      "npa_ratio": 1.9016,
-      "loan_to_deposit_ratio": -2.519,
-      "charge_off_rate": 0.033
+      "npa_change": -0.2226,
+      "deposit_growth_qoq": -0.3739,
+      "ldr_change": 0.2485,
+      "nim_change": -0.6103,
+      "npa_ratio": 3.278,
+      "loan_to_deposit_ratio": -1.3399,
+      "charge_off_rate": -0.1937
     }
   },
   "early_detection": {
-    "early_detection_rate": 0.0,
-    "avg_lead_quarters": 0,
+    "early_detection_rate": 0.2,
+    "avg_lead_quarters": 5.03,
     "n_stress_banks": 5
   },
   "stress_distribution": {
-    "Green": 888,
-    "Amber": 456,
-    "Red": 6
+    "Green": 752,
+    "Amber": 590,
+    "Red": 8
   },
   "forecast_comparison": {
     "npa_ratio": {
-      "sarima_avg_mape": 0.128,
-      "sarimax_avg_mape": 0.1589,
-      "avg_improvement_pct": -38.71,
-      "treatment_win_rate": 0.42,
+      "sarima_avg_mape": 0.1086,
+      "sarimax_avg_mape": 0.1086,
+      "avg_improvement_pct": 0.0,
+      "treatment_win_rate": 0.0,
       "n_banks": 50
     }
   }

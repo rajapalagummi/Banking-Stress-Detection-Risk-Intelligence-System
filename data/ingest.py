@@ -194,7 +194,7 @@ def build_bank_panel(n_banks: int = 50, quarters: int = 28) -> pd.DataFrame:
                 "net_interest_margin": round(nim, 6),
                 "charge_off_rate": round(charge_off_rate, 6),
                 "capital_ratio": round(capital_ratio, 6),
-                "is_stress_bank": int(is_stress_bank),
+                "is_stress_bank": int(is_stress_bank and stress_factor > 1.0),
                 "stress_factor": round(stress_factor, 4),
             })
 

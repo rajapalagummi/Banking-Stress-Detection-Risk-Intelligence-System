@@ -1,12 +1,12 @@
 # BankLens — Retail Banking Performance Intelligence & Risk Analytics Platform
 
-> Early warning stress detection across 4,000+ FDIC-insured institutions using logistic regression on call report signals, SARIMAX macro-factor forecasting, and a Power BI executive dashboard with DAX measures surfacing institution risk tiers and leading indicators.
+> Early warning stress detection system modeled on FDIC call report signal patterns, using logistic regression on NPA ratio, deposit outflow, and NIM compression, SARIMAX macro-factor forecasting, and a Power BI executive dashboard with DAX measures surfacing institution risk tiers and leading indicators.
 
 ---
 
 ## Abstract
 
-BankLens addresses a core challenge in banking analytics: detecting institutional stress before it becomes visible in headlines. Three questions are answered empirically using FDIC public call report data:
+BankLens addresses a core challenge in banking analytics: detecting institutional stress before it becomes visible in headlines. Three questions are answered empirically using synthetic panel data modeled on FDIC call report structure:
 
 1. **Can a composite stress score reliably classify institutions entering distress 2+ quarters before peak stress?** Logistic regression on NPA ratio change, deposit outflow rate, loan-to-deposit ratio change, and net interest margin compression — validated by TimeSeriesSplit CV ROC-AUC and early detection rate against known stress patterns.
 
